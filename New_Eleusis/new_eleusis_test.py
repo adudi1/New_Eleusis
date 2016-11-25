@@ -241,7 +241,7 @@ class TestNewEleusis(unittest.TestCase):
         self.assertFalse(p.evaluate(cards1))
         self.assertTrue(p.evaluate(cards2))
         self.assertFalse(p.evaluate(cards3))
-        self.assertFalse(p.evaluate(("5H", "5D", "QC")))
+        self.assertTrue(p.evaluate(("5H", "5D", "QC"))) #modified
         self.assertFalse(p.evaluate(("5H", "5D", "5C")))
         
                          
@@ -257,5 +257,6 @@ class TestNewEleusis(unittest.TestCase):
                          str(parse("equal(color(previous), R)")))
         self.assertEqual(repr(Tree(equal, Tree(color, 'previous'), 'R')),
                          repr(parse("equal(color(previous), R)")))
-        
-unittest.main()
+
+if __name__ == '__main__':
+    unittest.main()
