@@ -18,9 +18,10 @@ class State:
     def play(self, card):
         print "playedcard:"
         print card
-        n = len(prevcards)
-        self.parsedGodRule = new_eleusis.parse(self.rule())
-        tuple3 = (self.prevCards(n-2)[0],self.prevCards(n-1)[0],card)
+        n = len(self.prevCards)
+        self.parsedGodRule = new_eleusis.parse(self.rule)
+        # tuple3 = (self.prevCards[n-2][0],self.prevCards[n-1][0],card)
+        tuple3 = ("",self.prevCards[n-1][0],card)
         legalValue = self.parsedGodRule.evaluate(tuple3)
         print "legalValue {}".format(legalValue)
         self.updateBoardState(card, legalValue)
@@ -47,7 +48,7 @@ def nextcard(prevcards):
     # return card
     domain = build_domain(True)
     print domain
-    possibleRules = checkDomainWithVariables(prevcards,domain)
+    possibleRules = forward_checking(prevcards,domain)
     card = pickCardToTest(possibleRules[0])
     print "Rule Testing: {}".format(possibleRules[0])
     return card
@@ -110,7 +111,7 @@ def cardProperties(card):
     return {'suit':new_eleusis.suit(card),'value':new_eleusis.value(card),'color':new_eleusis.color(card)}
 
 
-def checkDomainWithVariables(prevcards, domain):
+def forward_checking(prevcards, domain):
     # check the domain with variables(c1,c2,..)
     # to play next card we take a rule from satisfing domain
     # if next card is illegal, that means our constraint (next card is legal) is failed,
@@ -146,14 +147,14 @@ def constraints():
 
 def build_domain(current=True,prev=False,prev2=False):
     if prev2:
-        return build_prev2_curr_domain()
+        return domain_3card_rules()
     elif prev:
-        return build_prev_curr_domain()
+        return domain_2card_rules()
     else:
-        return build_curr_domain()
+        return domain_1card_rules()
 
 
-def build_curr_domain():
+def domain_1card_rules():
     func = ['and','or']
     operators = ['equal']
     attributes = ['color','suit']
@@ -176,11 +177,11 @@ def build_curr_domain():
     print list
     return list
 
-def build_prev_curr_domain():
+def domain_2card_rules():
     # for 2 card rules
     pass
 
-def build_prev2_curr_domain():
+def domain_3card_rules():
     # for 3 card rules
     pass
 
@@ -199,7 +200,7 @@ def construct_rule(args, func, operators, attributes, cards, values):
         attr = attributes[i]
         card = cards[i]
         value = values[i]
-        prule = oper+'('+attr+'('+card+'), '+value+')' #throwing error here? #'str' object is not callable
+        prule = oper+'('+attr+'('+card+'), '+value+')'
         list.append(prule)
     if len(list)>1:
         s = ', '.join(list)
@@ -211,9 +212,9 @@ def construct_rule(args, func, operators, attributes, cards, values):
 
 # print construct_rule(2, 'and', ['equal','equal'],['color','color'],['previous','current'],['R','R'])
 # print "------------------"
-# build_curr_domain()
+# domain_1card_rules()
 
 prevcards = [('3S',[])]
 boardState = State(prevcards)
-boardState.setRule('equal(color(current), B)') #god rule
+boardState.setRule("equal(color(current), B)") #god rule
 boardState.play(nextcard(prevcards))
