@@ -3,11 +3,11 @@ from random import *
 
 
 class State:
-    def __init__(self, prevCards):
+    def __init__(self, prevCards): #prevCards = cards on table so far
         self.prevCards = prevCards
 
     def setRule(self, rule):
-        self.rule = rule
+        self.rule = rule # gods rule
 
     def rule(self):
         return self.rule
@@ -25,6 +25,7 @@ class State:
         legalValue = self.parsedGodRule.evaluate(tuple3)
         print "legalValue {}".format(legalValue)
         self.updateBoardState(card, legalValue)
+        print prevcards
 
 
     def updateBoardState(self,card, legalValue):
@@ -211,6 +212,7 @@ def construct_rule(args, func, operators, attributes, cards, values):
     return rule
 
 # print construct_rule(2, 'and', ['equal','equal'],['color','color'],['previous','current'],['R','R'])
+# and(equal(color(previous),R),equal(color(current),R))
 # print "------------------"
 # domain_1card_rules()
 
@@ -218,3 +220,17 @@ prevcards = [('3S',[])]
 boardState = State(prevcards)
 boardState.setRule("equal(color(current), B)") #god rule
 boardState.play(nextcard(prevcards))
+
+#tasks:
+# 0. rule and cards - initial check to -kaushik
+# 1.construct_rule() - kaushik
+# 2. domain_1card_rules() - Mounica
+# 3. domain_2card_rules() - Ethan
+# 4. domain_3card_rules() - Ethan
+# 5. nextcard() # small change - Anusha
+# 6. Forward_checking #small change - Anusha
+# 7. Score() - Anusha
+# 8. confidence for rule - Anusha
+# 9. satisfying_values(rule) - Mounica
+# 10. satisfying_suits(rule) - Mounica
+# 11. check against already played cards - next card -kaushik
