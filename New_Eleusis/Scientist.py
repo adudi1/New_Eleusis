@@ -33,7 +33,7 @@ class State:
             c = (card,[])
             self.prevCards.append(c)
         else:
-            self.prevCards[len(self.prevcards)-1][2][0] = card
+            self.prevCards[len(self.prevCards)-1][1].append(card)
             pass
 
     def scientist(self):
@@ -219,7 +219,8 @@ def construct_rule(args, func, operators, attributes, cards, values):
 prevcards = [('3S',[])]
 boardState = State(prevcards)
 boardState.setRule("equal(color(current), B)") #god rule
-boardState.play(nextcard(prevcards))
+#boardState.play(nextcard(prevcards))
+boardState.play("3H")
 
 #tasks:
 # 0. rule and cards - initial check to -kaushik
