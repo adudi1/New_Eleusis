@@ -147,7 +147,7 @@ def constraints():
 #     return build_domain()
 
 def build_domain(current=True,prev=False,prev2=False):
-    return domain_2card_rules()
+    return domain_3card_rules()
     if prev2:
         return domain_3card_rules()
     elif prev:
@@ -188,6 +188,7 @@ def domain_2card_rules():
     list = []
     m = 0
     n = 0
+    card = [cards[1], cards[0]]
     for h in func:
         for i in operators:
             for i2 in operators:
@@ -200,45 +201,98 @@ def domain_2card_rules():
                                     fun = h
                                     oper = [i, i2]
                                     attr = [j, j2]
-                                    card = [cards[0], cards[1]]
                                     value = [v, v2]
-                                    list.append(construct_rule(2,fun,oper,attr,card,value))
+                                    list.append(construct_rule(1,fun,oper,attr,card,value))
+                    n = 0
+                m = 0
+    func = ['and', 'or']
+    operators = ['greater', 'less']
+    attributes = ['value']
+    cards = ['current', 'prev']
+    values = [['A','2','3','4','5','6','7','8','9','10','J','Q','K']]
+    m = 0
+    n = 0
+    for h in func:
+        for i in operators:
+            for i2 in operators:
+                for j in attributes:
+                    m += 1
+                    for j2 in attributes:
+                            n += 1
+                            for v in values[m-1]:
+                                for v2 in values[n-1]:
+                                    fun = h
+                                    oper = [i, i2]
+                                    attr = [j, j2]
+                                    value = [v, v2]
+                                    list.append(construct_rule(1,fun,oper,attr,card,value))
                     n = 0
                 m = 0
     return list
 
 def domain_3card_rules():
     func = ['and', 'or']
-    operators = ['equal', 'notf', 'greater', 'less']
+    operators = ['equal', 'notf']
     attributes = ['color','suit','value', 'is_royal', 'even']
     cards = ['current', 'prev', 'prev2']
     values = [['R','B'],['C','H','D','S'],['A','2','3','4','5','6','7','8','9','10','J','Q','K'], ['True', 'False'], ['True', 'False']]
     list = []
+    card = [cards[2], cards[1], cards[0]]
     m = 0
     n = 0
     p = 0
     for h in func:
-        for i in operators:
-            for i2 in operators:
-                for i3 in operators:
-                    for j in attributes:
-                        m += 1
-                        for j2 in attributes:
-                            n += 1
-                            for j3 in attributes:
-                                p += 1
-                                for v in values[m-1]:
-                                    for v2 in values[n-1]:
-                                        for v3 in values[p-1]:
-                                            fun = h
-                                            oper = [i, i2, i3]
-                                            attr = [j, j2, j3]
-                                            card = [cards[0], cards[1], cards[2]]
-                                            value = [v, v2, v3]
-                                            list.append(construct_rule(3,fun,oper,attr,card,value))
-                            p = 0
-                        n = 0
-                    m = 0
+        for h2 in func:
+            for i in operators:
+                for i2 in operators:
+                    for i3 in operators:
+                        for j in attributes:
+                            m += 1
+                            for j2 in attributes:
+                                n += 1
+                                for j3 in attributes:
+                                    p += 1
+                                    for v in values[m-1]:
+                                        for v2 in values[n-1]:
+                                            for v3 in values[p-1]:
+                                                fun = [h, h2]
+                                                oper = [i, i2, i3]
+                                                attr = [j, j2, j3]
+                                                value = [v, v2, v3]
+                                                list.append(construct_rule(1,fun,oper,attr,card,value))
+                                p = 0
+                            n = 0
+                        m = 0
+    func = ['and', 'or']
+    operators = ['greater', 'less']
+    attributes = ['value']
+    cards = ['current', 'prev', 'prev2']
+    values = [['A','2','3','4','5','6','7','8','9','10','J','Q','K']]
+    m = 0
+    n = 0
+    p = 0
+    for h in func:
+        for h2 in func:
+            for i in operators:
+                for i2 in operators:
+                    for i3 in operators:
+                        for j in attributes:
+                            m += 1
+                            for j2 in attributes:
+                                n += 1
+                                for j3 in attributes:
+                                    p += 1
+                                    for v in values[m-1]:
+                                        for v2 in values[n-1]:
+                                            for v3 in values[p-1]:
+                                                fun = [h, h2]
+                                                oper = [i, i2, i3]
+                                                attr = [j, j2, j3]
+                                                value = [v, v2, v3]
+                                                list.append(construct_rule(1,fun,oper,attr,card,value))
+                                p = 0
+                            n = 0
+                        m = 0
     return list
 
 def construct_rule(args, func, operators, attributes, cards, values):
@@ -271,10 +325,12 @@ def construct_rule(args, func, operators, attributes, cards, values):
 # print "------------------"
 # domain_1card_rules()
 
-prevcards = [('3S',[])]
-boardState = State(prevcards)
-boardState.setRule("equal(color(current), B)") #god rule
-boardState.play(nextcard(prevcards))
+print (domain_3card_rules())
+
+#prevcards = [('3S',[])]
+#boardState = State(prevcards)
+#boardState.setRule("equal(color(current), B)") #god rule
+#boardState.play(nextcard(prevcards))
 #boardState.play("3H")
 
 #tasks:
