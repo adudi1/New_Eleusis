@@ -157,9 +157,9 @@ def build_domain(current=True,prev=False,prev2=False):
 def domain_1card_rules():
     func = ['and','or']
     operators = ['equal','notf']#,'less','greater']
-    attributes = ['color','suit','value','is_royal','even','odd']
+    attributes = ['color','suit','value','is_royal','even']
     cards = ['current']
-    values = [['R','B'],['C','H','D','S'],['1','2','3','4','5','6','7','8','9','10','11','12','13'],['T','F'],['T','F'],['T','F']]
+    values = [['R','B'],['C','H','D','S'],['1','2','3','4','5','6','7','8','9','10','11','12','13'],['T','F'],['T','F']]
     list = []
     #for f in func:
     for i in operators:
@@ -180,37 +180,65 @@ def domain_1card_rules():
     #return list
     func = ['and']
     cards = ['current', 'current']
-    attributes2 = ['color', 'suit', 'value', 'is_royal', 'even']  # ,'odd']
-    m = 0
-    n = 0
-    k = 0
-    l = 0
+
     for h in func:
+        m = 0
+        n = 0
         for i in operators:
             for i2 in operators:
+                k = 0
+                l = 0
                 for j in attributes:
                     m+=1
                     k=k+1
                     for j2 in attributes:
-                        #if (attributes != 'color'):
                         n += 1
                         l=l+1
                         for v in values[m-1]:
                             for v2 in values[n-1]:
-                                #if (v!=v2):
                                 if(j!=j2):
-                                    if (k<l) and (k!=3) and (k<5):
-                                        fun = h
-                                        oper = [i, i2]
-                                        attr = [j, j2]
-                                        card = [cards[0], cards[1]]
-                                        value = [v, v2]
-                                        list.append(construct_rule(2,fun,oper,attr,card,value))
+                                    if (k<l) and ((k==3) or (k==2)):
+                                        if (((i == 'notf' or i2 == 'notf') and ((j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (i != 'notf' and i2!='notf'):
+                                            fun = h
+                                            oper = [i, i2]
+                                            attr = [j, j2]
+                                            card = [cards[0], cards[1]]
+                                            value = [v, v2]
+                                            list.append(construct_rule(2,fun,oper,attr,card,value))
                     #values.remove(values[0])
                     n = 0
                     l=0
                     #attributes.remove(attributes[0])
                 m=0
+    func = ['or']
+    cards = ['current', 'current']
+    m = 0
+    n = 0
+    for h in func:
+        for i in operators:
+            for i2 in operators:
+                k = 0
+                l = 0
+                for j in attributes:
+                    m += 1
+                    k = k + 1
+                    for j2 in attributes:
+                        n += 1
+                        l = l + 1
+                        for v in values[m - 1]:
+                            for v2 in values[n - 1]:
+                                if (v != v2):
+                                    if (k < l) :
+                                        if (((i == 'notf' or i2 == 'notf') and ((j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (i != 'notf' and i2!='notf'):
+                                            fun = h
+                                            oper = [i, i2]
+                                            attr = [j, j2]
+                                            card = [cards[0], cards[1]]
+                                            value = [v, v2]
+                                            list.append(construct_rule(2, fun, oper, attr, card, value))
+                    n = 0
+                    l = 0
+                m = 0
     print list
     return list
 
