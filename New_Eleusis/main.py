@@ -1,4 +1,13 @@
-import Scientist_Merged
+'''
+Team Name : Neurons
+Anusha Dudi
+Kaushik Velusamy
+Mounica Kalavakuri
+Ethan Hein
+'''
+
+
+import Scientist_Merged_2
 import new_eleusis
 #The New_Eleusis project starts here.
 def main():
@@ -25,10 +34,10 @@ def main():
 
     initial_number_of_cards = len(cards_on_table)
     if initial_number_of_cards == 1:
-        print "Cool, You have entered %d card and the card is" %(initial_number_of_cards)
+        print "You have entered %d card and the card is" %(initial_number_of_cards)
         print cards_on_table
     else:
-        print "Cool, You have entered %d cards and the cards are" % (initial_number_of_cards)
+        print "You have entered %d cards and the cards are" % (initial_number_of_cards)
         print cards_on_table
 
     cards_on_the_boards_state = []
@@ -49,8 +58,7 @@ def main():
     print "\n \n Your Entered Rule is ==> ", gods_rule, "\n"
 
     print "Before the game starts, check if the passed card obey's the rule else quit the game here. Implement this later \n "
-    Scientist_Merged.scientist(cards_on_the_boards_state, initial_number_of_cards, gods_rule)
-
+    Scientist_Merged_2.scientist(cards_on_the_boards_state, initial_number_of_cards, gods_rule)
 
 """
     p = new_eleusis.parse(gods_rule)
@@ -65,8 +73,6 @@ def main():
               "Try again\n"
         exit()
 """
-
-
 
 if __name__ == "__main__":
     main()
