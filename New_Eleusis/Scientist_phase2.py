@@ -64,6 +64,7 @@ class Board_State:
 
         if card in self.cardsToPlay:
             self.cardsToPlay.remove(card)
+            self.cardsToPlay.append(self.draw_card())
         print "Play number: {} playedcard: {}".format(self.cardsPlayed, card)
         if len(self.prevCards) == 0:
             self.game_ended = True
@@ -246,7 +247,10 @@ class Board_State:
         r = choice(self.cardsToPlay)
         return r
 
-
+    def draw_card(self):
+        values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+        suits = ["S", "H", "D", "C"]
+        return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
 def build_domain(current=True, prev=False, prev2=False):
     if prev2:
         return domain_3card_rules()
