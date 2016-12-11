@@ -1,0 +1,137 @@
+
+def domain_1card_rules():
+    func = ['and','or']
+    operators = ['equal','notf']
+    attributes = ['color','suit','value','is_royal','even']
+    cards = ['current']
+    values = [['R','B'],['C','H','D','S'],['1','2','3','4','5','6','7','8','9','10','11','12','13'],['True','False'],['True','False']]
+    list = []
+    #for f in func:
+    for i in operators:
+        n=0;
+        if i=='equal' or i == 'notf':
+            for j in attributes:
+                n+=1;
+                for k in cards:
+                    for v in values[n-1]:
+                        if (i=='notf') and ((j=='suit')or j=='value') or i=='equal':
+                            oper = [i]
+                            attr = [j]
+                            card = [k]
+                            value = [v]
+                            list.append(construct_rule(1,None,oper,attr,card,value))
+
+    func = ['and']
+    cards = ['current', 'current']
+
+    for h in func:
+        m = 0
+        n = 0
+        for i in operators:
+            for i2 in operators:
+                k = 0
+                l = 0
+                for j in attributes:
+                    m+=1
+                    k=k+1
+                    for j2 in attributes:
+                        n += 1
+                        l=l+1
+                        for v in values[m-1]:
+                            for v2 in values[n-1]:
+                                if(j!=j2):
+                                    if (k<l):
+                                        if (((i == 'notf' or i2 == 'notf') and ((j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (i != 'notf' and i2!='notf'):
+                                            fun = h
+                                            oper = [i, i2]
+                                            attr = [j, j2]
+                                            card = [cards[0], cards[1]]
+                                            value = [v, v2]
+                                            list.append(construct_rule(2,fun,oper,attr,card,value))
+                    #values.remove(values[0])
+                    n = 0
+                    l=0
+                    #attributes.remove(attributes[0])
+                m=0
+
+
+    func = ['or']
+    cards = ['current', 'current']
+    m = 0
+    n = 0
+    for h in func:
+        for i in operators:
+            for i2 in operators:
+                k = 0
+                l = 0
+                for j in attributes:
+                    m += 1
+                    k = k + 1
+                    for j2 in attributes:
+                        n += 1
+                        l = l + 1
+                        for v in values[m - 1]:
+                            for v2 in values[n - 1]:
+                                if (v != v2):
+                                    if (k < l) :
+                                        if (((i == 'notf' or i2 == 'notf') and ((j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (i != 'notf' and i2!='notf'):
+                                            fun = h
+                                            oper = [i, i2]
+                                            attr = [j, j2]
+                                            card = [cards[0], cards[1]]
+                                            value = [v, v2]
+                                            list.append(construct_rule(2, fun, oper, attr, card, value))
+                    n = 0
+                    l = 0
+                m = 0
+
+    func = ['and', 'or']
+    operators = ['less','greater']
+    attributes = ['color', 'suit', 'value']
+    cards = ['current']
+    values = [['R','B'], ['C','H', 'D', 'S'], ['1','2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']]
+
+    for i in operators:
+        n = 0;
+        for j in attributes:
+            n += 1;
+            for k in cards:
+                for v in values[n - 1]:
+                    oper = [i]
+                    attr = [j]
+                    card = [k]
+                    value = [v]
+                    list.append(construct_rule(1, None, oper, attr, card, value))
+
+    func = ['and','or']
+    operators = ['equal','less','greater']
+    cards = ['current', 'current']
+
+    for h in func:
+        m = 0
+        n = 0
+        for i in operators:
+            for i2 in operators:
+                k = 0
+                l = 0
+                for j in attributes:
+                    m += 1
+                    k = k + 1
+                    for j2 in attributes:
+                        n += 1
+                        l = l + 1
+                        for v in values[m - 1]:
+                            for v2 in values[n - 1]:
+                                if (j != j2 and ((i=='equal' and i2!='equal') or (i=='less' or i=='greater'))):
+                                    if (k < l):
+                                        fun = h
+                                        oper = [i, i2]
+                                        attr = [j, j2]
+                                        card = [cards[0], cards[1]]
+                                        value = [v, v2]
+                                        list.append(construct_rule(2, fun, oper, attr, card, value))
+                    n = 0
+                    l = 0
+                m = 0
+
+    return list
