@@ -61,7 +61,7 @@ adversary2 = Adversary()
 adversary3 = Adversary()
 
 # Set a rule for testing
-rule = "if(is_royal(current), False)"
+rule = "equal(is_royal(current), False)"
 setRule(rule)
 
 # The three cards that adhere to the rule
@@ -80,7 +80,7 @@ for round_num in range(14):
         if is_card(player_card_rule):
             del cards[0]
             cards.append(player_card_rule)
-        else
+        else:
             raise Exception('')
         
 
@@ -119,4 +119,4 @@ for round_num in range(14):
 rule_player = player.play(cards)
 
 # Check if the guessed rule is correct and print the score
-score(player)
+score()

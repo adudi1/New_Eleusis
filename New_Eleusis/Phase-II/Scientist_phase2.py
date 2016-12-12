@@ -303,8 +303,8 @@ def domain_1card_rules():
                                 if (j != j2):
                                     if (k < l):
                                         if (((i == 'notf' or i2 == 'notf') and (
-                                            (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
-                                                i != 'notf' and i2 != 'notf'):
+                                                    (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
+                                                        i != 'notf' and i2 != 'notf'):
                                             fun = h
                                             oper = [i, i2]
                                             attr = [j, j2]
@@ -335,8 +335,8 @@ def domain_1card_rules():
                                 if (v != v2):
                                     if (k < l):
                                         if (((i == 'notf' or i2 == 'notf') and (
-                                            (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
-                                                i != 'notf' and i2 != 'notf'):
+                                                    (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
+                                                        i != 'notf' and i2 != 'notf'):
                                             fun = h
                                             oper = [i, i2]
                                             attr = [j, j2]
@@ -548,14 +548,14 @@ def score():
 
 # -----------------------------------
 #
-def generate_random_card():
-    values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-    suits = ["S", "H", "D", "C"]
-    return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
-
-
-setRule("iff(equal(color(previous), R), equal(color(current), B), True)")
-scientist(['3H', '2S', 'JH'], [generate_random_card() for i in range(14)], False)
-scientist(['5C', '3H', 'QS'], None, False)
-scientist(['3S', '6D', 'AC'], None, False)
-scientist(['4S', '10C', 'KH'], None, True)
+# def generate_random_card():
+#     values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+#     suits = ["S", "H", "D", "C"]
+#     return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
+#
+#
+# setRule("iff(equal(color(previous), R), equal(color(current), B), True)")
+# scientist(['3H', '2S', 'JH'], [generate_random_card() for i in range(14)], False)
+# scientist(['5C', '3H', 'QS'], None, False)
+# scientist(['3S', '6D', 'AC'], None, False)
+# scientist(['4S', '10C', 'KH'], None, True)
