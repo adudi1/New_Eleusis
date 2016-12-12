@@ -61,7 +61,7 @@ adversary2 = Adversary()
 adversary3 = Adversary()
 
 # Set a rule for testing
-rule = "if(is_royal(current), False)"
+rule = "equal(is_royal(current), False)"
 setRule(rule)
 
 # The three cards that adhere to the rule
