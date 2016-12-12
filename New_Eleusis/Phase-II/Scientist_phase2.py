@@ -10,6 +10,8 @@ import new_eleusis
 from random import *
 
 
+DECLARERULE_CONFIDENCE = 10.0/20
+
 class Score:
     LEGALCARD = 1 # +1 for every successful play over 20 and under 200;
     ILLEGALCARD = 2 # +2  for every failed play;
@@ -19,7 +21,7 @@ class Score:
     ENDEDPLAYER_CORRECT_RULE_POINT = -25 #If the player that ended the game gives the correct rule, it receives an additional -25 points.
 
 
-class Board_State:
+class Scientist:
     prevCards = []
     cardsToPlay = []
     cardsPlayed = 0
@@ -30,19 +32,13 @@ class Board_State:
     possibleRules = []
     playingLegalCard = True
     current_domain = 1
-    rule = ""
+    god_rule = ""
     game_ended = False
     no_rules = False
 
     def __init__(self):
-        pass
-    def set_no_rules(self):
-        self.no_rules=False
-        pass
-    def initialise(self):
         self.possibleRules = self.forward_checking(build_domain(True))
         self.pickRule()
-        pass
 
     def update_board(self, card, legal_value):
         if legal_value:
@@ -52,89 +48,51 @@ class Board_State:
             self.prevCards[len(self.prevCards) - 1][1].append(card)
 
     def hand(self, cards):
-        print "The card's in the scientist's hand: ", cards
+        # print "The card's in the scientist's hand: ", cards
         self.cardsToPlay = cards
 
     def declareRule(self):
-        print "\n\nThe Game Ends here. Analyzing and populating the Results.....\n\n"
-        if self.rule == self.currentRule:
+        print "\n"
+        if self.currentRuleConfidence >= DECLARERULE_CONFIDENCE:
             self.currentScore += Score.CORRECT_RULE_POINT
-            print "subtracting 75 points for guessing the correct rule. Score {}".format(self.currentScore)
+            print "-75 points for guessing the correct/logical equivalent rule. Score {}".format(self.currentScore)
             self.currentScore += Score.ENDEDPLAYER_CORRECT_RULE_POINT
-            print "subtracting 25 points because our scientist ended the game giving the correct rule. Score: {}".format(self.currentScore)
+            print "-25 points because our scientist ended the game giving the correct rule. Score: {}".format(self.currentScore)
+        elif self.rule() == self.currentRule:
+            self.currentScore += Score.CORRECT_RULE_POINT
+            print "-75 points for guessing the correct/logical equivalent rule. Score {}".format(self.currentScore)
+        elif self.currentRuleConfidence == 0:
+            self.currentScore += Score.BOARDWRONGRULE
+            print "+30 point for hypothesis that does not describe all cards on the board."
         else:
             self.currentScore += Score.WRONGRULE
-            print "Adding 15 points for guessing the wrong rule"
+            print "+15 points for guessing the wrong rule"
 
-        print "\n Performing additional scoring analysis: Checking if the guessed rule describe all the cards on the board"
-        legal_cards_on_board = [x[0] for x in self.prevCards]
-        currenthypothesis = new_eleusis.parse(self.currentRule)
-        n = len(self.prevCards)
-        count = 0
-        if n % 3 == 0:
-            stop = n
-        elif n % 3 == 1:
-            stop = n - 1
-        elif n % 3 == 2:
-            stop = n - 2
-        flagboardwrongrule = False
-        while (count < stop):
-            tuple3 = (legal_cards_on_board[count], legal_cards_on_board[count + 1], legal_cards_on_board[count + 2])
-            count += 3
-            try:
-                legalValue = currenthypothesis.evaluate(tuple3)
-                if not legalValue:
-                        self.currentScore += Score.BOARDWRONGRULE
-                        print "---Adding +30 point BOARDWRONGRULE for the currenthypothesis that does not describe all cards on the board."
-                        flagboardwrongrule = True
-                        break
-            except:
-                    print "currenthypothesis could not evaluated in scoring BOARDWRONGRULE +30 for a rule that does not describe all cards on the board."
-                    break
-        if not flagboardwrongrule:
-            if n % 3 == 1 or n % 3 == 2:
-                tuple3 = (legal_cards_on_board[n - 3], legal_cards_on_board[n - 2], legal_cards_on_board[n - 1])
-                try:
-                    legalValue = currenthypothesis.evaluate(tuple3)
-                    if not legalValue:
-                        self.currentScore += Score.BOARDWRONGRULE
-                        print "---Adding +30 point BOARDWRONGRULE for the currenthypothesis that does not describe all cards on the board."
-                        flagboardwrongrule = True
-                except:
-                    print "currenthypothesis could not evaluated in scoring BOARDWRONGRULE +30 for a rule that does not describe all cards on the board."
-        if not flagboardwrongrule:
-            print "\nAll the cards on the board satisfy the current hypothesis. We might have guessed the correct rule or there could be logical equivalence exisiting here." \
-                  "\n Please check for human manual evaluation of logical equivalence here"
-
-        print "\n\n********************************************************************************"
-        print "Output Rule: Our Hypothesis : {}    score : {}      confidence:{}".format(self.currentRule, self.score(),
+        print "********************************************************************************"
+        print "Hypothesis: {} score : {} confidence:{}".format(self.currentRule, self.score(),
                                                                 self.currentRuleConfidence)
-        print "\nGods Rule Was: {}. \n--Manually check here for logical equivalency.".format(self.rule)
+        print "\nGod's Rule Was: {}. \n--Manually check here for logical equivalency.".format(self.rule())
         print "********************************************************************************"
         return self.currentRule
 
     def play_card(self, card):
         if card == None:
             return self.declareRule()
-
         if card in self.cardsToPlay:
             self.cardsToPlay.remove(card)
             self.cardsToPlay.append(self.draw_card())
-        print "Scientist's Turn number: {} and the  playedcard: {}".format(self.cardsPlayed, card)
+        print "Play number: {}  playedcard: {} score: {}".format(self.cardsPlayed+1, card, self.score())
         if len(self.prevCards) == 0:
             self.game_ended = True
             return self.declareRule()
 
         self.cardsPlayed += 1
 
-        if self.cardsPlayed % 10 == 0:
-            self.possibleRules = self.forward_checking(self.possibleRules)
-        legalValue = play(card)
+        legalValue = self.play(card)
         self.update_board(card, legalValue)
         self.update_score(legalValue)
         self.update_confidence(legalValue)
-        # self.updateBoardState(card, legalValue)
-        # print "game_ended?::", self.game_ended
+
         if self.game_ended:
             return self.declareRule()
 
@@ -143,27 +101,27 @@ class Board_State:
     def update_confidence(self, legal_value):
         if self.playingLegalCard:
             if legal_value:
-                self.updatecurrentRuleConfidence(1.0 / 14)
+                self.updatecurrentRuleConfidence(1.0 / 20)
             else:
                 self.updatecurrentRuleConfidence(0)
         else:
             if not legal_value:
-                self.updatecurrentRuleConfidence(1.0 / 14)
+                self.updatecurrentRuleConfidence(1.0 / 20)
             else:
                 self.updatecurrentRuleConfidence(0)
 
     def update_score(self, legal_value):
         if legal_value:
             self.increment_score(Score.LEGALCARD)
-            print "-- Incrementing Score by +1 for every successful play"
+            # print "-- Incrementing Score by +1 for every successful play"
         else:
             self.increment_score(Score.ILLEGALCARD)
-            print "-- Incrementing Score by +2 for every failed play"
+            # print "-- Incrementing Score by +2 for every failed play"
 
 
     def increment_score(self, value):
-        # if self.cardsPlayed > 20:
-        self.currentScore += value
+        if self.cardsPlayed >= 20:
+            self.currentScore += value
 
     def nextcard(self):
         # return card
@@ -180,15 +138,8 @@ class Board_State:
             self.current_domain += 1
             self.possibleRules = self.forward_checking(build_domain(True, True, True))
         else:
-            # self.set_no_rules()
             self.no_rules = True
             self.game_ended = True
-
-    def setRule(self, rule):
-        self.rule = rule  # gods rule
-
-    def rule(self):
-        return self.rule
 
     def boardState(self):
         return self.state
@@ -197,15 +148,11 @@ class Board_State:
         self.currentRule = rule
         self.currentRuleConfidence = 0.0
 
-    def scientist(self):
-        pass
-
-    def score(self):
-        return self.currentScore
-
     def updatecurrentRuleConfidence(self, value):
         if value > 0:
             self.currentRuleConfidence += value
+            if self.currentRuleConfidence >= DECLARERULE_CONFIDENCE:  # confidence level to declare rule
+                self.game_ended = True
         else:
             self.currentRuleConfidence = 0
             self.pickRule()
@@ -300,6 +247,60 @@ class Board_State:
                 satisfyingDomain.append(rule)
         return satisfyingDomain
 
+
+    def scientist(self, cards, hand, game_ended):
+        print cards, hand, game_ended, self.rule()
+        if self.game_ended:
+            exit(0)
+        for card in cards:
+            self.update_board(card, self.play(card))
+        self.possibleRules = self.forward_checking(self.possibleRules)
+        self.checkCurrentRule();
+
+
+        if hand is not None:
+            self.hand(hand)
+        if game_ended or self.game_ended:
+            print "The Current board state :", self.prevCards
+            return self.declareRule()
+        return self.play_card(self.nextcard())
+
+
+    def setRule(self, rule):
+        # self.setRule(rule)
+        # self.initialise()
+        self.god_rule = rule
+
+
+    def rule(self):  # returns god's rule or hypothesis?
+        return self.god_rule
+
+
+    def boardState(self):
+        return self.prevCards
+
+
+    def play(self,card):  # checks if a card is legal or not
+        if self.rule() == "":
+            return True
+        parsedGodRule = new_eleusis.parse(self.rule())
+        n = len(self.boardState())
+        if n < 3:
+            return True
+        else:
+            tuple3 = (self.prevCards[n - 2][0], self.prevCards[n - 1][0], card)
+        try:
+            legalValue = parsedGodRule.evaluate(tuple3)
+        except:
+            print "god rule can't evaluate"
+            exit()
+        return legalValue
+
+
+    def score(self):
+        return self.currentScore
+
+
     def random_card(self):
         r = choice(self.cardsToPlay)
         return r
@@ -308,6 +309,7 @@ class Board_State:
         values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
         suits = ["S", "H", "D", "C"]
         return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
+
 def build_domain(current=True, prev=False, prev2=False):
     if prev2:
         return domain_3card_rules()
@@ -522,6 +524,7 @@ def domain_3card_rules():
                         p = 0
                     n = 0
                 m = 0
+    print list[1:50]
     return list
 
 
@@ -549,72 +552,3 @@ def construct_rule(args, func, operators, attributes, cards, values):
         rule = list[0]
 
     return rule
-
-
-bs = Board_State();
-
-
-def scientist(cards, hand, game_ended):
-    for card in cards:
-        bs.update_board(card, play(card))
-    # bs.updateBoard_cards(cards)
-    bs.possibleRules = bs.forward_checking(bs.possibleRules)
-    bs.checkCurrentRule();
-    #print "The card's in the scientist's hand: ", hand
-    if hand is not None:
-        bs.hand(hand)
-    if game_ended or bs.game_ended:
-        print "\n"
-        print "The Current board state :", bs.prevCards
-        bs.declareRule()
-        exit(0)
-    return bs.play_card(bs.nextcard())
-
-
-def setRule(rule):
-    bs.setRule(rule)
-    bs.initialise()
-
-
-def rule():  # returns god's rule or hypothesis?
-    return bs.rule
-
-
-def boardState():
-    return bs.prevCards
-
-
-def play(card):  # checks if a card is legal or not
-    if rule() == "":
-        return True
-    parsedGodRule = new_eleusis.parse(rule())
-    n = len(boardState())
-    if n < 3:
-        return True
-    else:
-        tuple3 = (bs.prevCards[n - 2][0], bs.prevCards[n - 1][0], card)
-    try:
-        legalValue = parsedGodRule.evaluate(tuple3)
-    except:
-        print "god rule can't evaluate"
-        exit()
-    return legalValue
-
-
-def score():
-    return bs.currentScore
-
-
-# -----------------------------------
-#
-def generate_random_card():
-    values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-    suits = ["S", "H", "D", "C"]
-    return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
-
-
-setRule("iff(equal(color(previous), R), equal(color(current), B), True)")
-scientist(['3H', '2S', 'JH'], [generate_random_card() for i in range(14)], False)
-scientist(['5C', '3H', 'QS'], None, False)
-scientist(['3S', '6D', 'AC'], None, False)
-scientist(['4S', '10C', 'KH'], None, True)

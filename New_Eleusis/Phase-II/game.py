@@ -13,7 +13,7 @@ def generate_random_card():
     return values[randint(0, len(values)-1)] + suits[randint(0, len(suits)-1)]
 
 class Player(object):
-    def __init__(self):
+    def __init__(self, scientist):
         self.hand = [generate_random_card() for i in range(14)]
 
     def play(self, cards):
@@ -22,7 +22,7 @@ class Player(object):
         Your scientist should play a card out of its given hand OR return a rule, not both.
         'game_ended' parameter is a flag that is set to True once the game ends. It is False by default
         """
-        return scientist(cards, self.hand, game_ended)
+        return scientist.scientist(cards, self.hand, game_ended)
 
 
 class Adversary(object):
@@ -55,14 +55,15 @@ class Adversary(object):
 
 
 # The players in the game
-player = Player()
+scientist = Scientist()
+player = Player(scientist)
 adversary1 = Adversary()
 adversary2 = Adversary()
 adversary3 = Adversary()
 
 # Set a rule for testing
 rule = "equal(is_royal(current), False)"
-setRule(rule)
+scientist.setRule(rule)
 
 # The three cards that adhere to the rule
 cards = ["10H", "2C", "4S"]
@@ -115,6 +116,7 @@ for round_num in range(14):
             raise Exception('')
 
     except:
+        print "game_ended", game_ended
         game_ended = True
         break
 
@@ -122,4 +124,4 @@ for round_num in range(14):
 rule_player = player.play(cards)
 
 # Check if the guessed rule is correct and print the score
-score()
+scientist.score()
