@@ -302,8 +302,8 @@ class Tree:
                 else:
                     return subeval(self.right)
         except Exception as e:
-            print e
-            print "Expression = ", self
-            print " with cards =", cards
+            #print e
+            #print "Expression = ", self
+            #print " with cards =", cards
             raise
 

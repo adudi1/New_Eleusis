@@ -11,10 +11,12 @@ from random import *
 
 
 class Score:
-    LEGALCARD = 1
-    ILLEGALCARD = 2
-    WRONGRULE = 15
-    BOARDWRONGRULE = 30
+    LEGALCARD = 1 # +1 for every successful play over 20 and under 200;
+    ILLEGALCARD = 2 # +2  for every failed play;
+    WRONGRULE = 15 # +15 for a rule that is not equivalent to the correct rule;
+    BOARDWRONGRULE = 30 # +30 for a rule that does not describe all cards on the board.
+    CORRECT_RULE_POINT = -75 # Each player that guesses the correct rule (or its logical equivalent), with no extra terms, receives an  additional  bonus of -75 points.
+    ENDEDPLAYER_CORRECT_RULE_POINT = -25 #If the player that ended the game gives the correct rule, it receives an additional -25 points.
 
 
 class Board_State:
@@ -50,7 +52,7 @@ class Board_State:
             self.prevCards[len(self.prevCards) - 1][1].append(card)
 
     def hand(self, cards):
-        print "hand: ", cards
+        print "The card's in the scientist's hand: ", cards
         self.cardsToPlay = cards
 
     def declareRule(self):
@@ -65,7 +67,7 @@ class Board_State:
         if card in self.cardsToPlay:
             self.cardsToPlay.remove(card)
             self.cardsToPlay.append(self.draw_card())
-        print "Play number: {} playedcard: {}".format(self.cardsPlayed, card)
+        print "Scientist's Turn number: {} and the  playedcard: {}".format(self.cardsPlayed, card)
         if len(self.prevCards) == 0:
             self.game_ended = True
             return self.declareRule()
@@ -303,8 +305,8 @@ def domain_1card_rules():
                                 if (j != j2):
                                     if (k < l):
                                         if (((i == 'notf' or i2 == 'notf') and (
-                                                    (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
-                                                        i != 'notf' and i2 != 'notf'):
+                                            (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
+                                                i != 'notf' and i2 != 'notf'):
                                             fun = h
                                             oper = [i, i2]
                                             attr = [j, j2]
@@ -335,8 +337,8 @@ def domain_1card_rules():
                                 if (v != v2):
                                     if (k < l):
                                         if (((i == 'notf' or i2 == 'notf') and (
-                                                    (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
-                                                        i != 'notf' and i2 != 'notf'):
+                                            (j == 'suit' or j == 'value') and (j2 == 'suit' or j2 == 'value')))) or (
+                                                i != 'notf' and i2 != 'notf'):
                                             fun = h
                                             oper = [i, i2]
                                             attr = [j, j2]
@@ -506,9 +508,10 @@ def scientist(cards, hand, game_ended):
     if hand is not None:
         bs.hand(hand)
     if game_ended or bs.game_ended:
-        print "bs:", bs.prevCards
-        return bs.declareRule()
-
+        print "\n"
+        print "The Current board state :", bs.prevCards
+        bs.declareRule()
+        exit(0)
     return bs.play_card(bs.nextcard())
 
 
@@ -548,14 +551,14 @@ def score():
 
 # -----------------------------------
 #
-# def generate_random_card():
-#     values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
-#     suits = ["S", "H", "D", "C"]
-#     return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
-#
-#
-# setRule("iff(equal(color(previous), R), equal(color(current), B), True)")
-# scientist(['3H', '2S', 'JH'], [generate_random_card() for i in range(14)], False)
-# scientist(['5C', '3H', 'QS'], None, False)
-# scientist(['3S', '6D', 'AC'], None, False)
-# scientist(['4S', '10C', 'KH'], None, True)
+def generate_random_card():
+    values = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
+    suits = ["S", "H", "D", "C"]
+    return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
+
+
+setRule("iff(equal(color(previous), R), equal(color(current), B), True)")
+scientist(['3H', '2S', 'JH'], [generate_random_card() for i in range(14)], False)
+scientist(['5C', '3H', 'QS'], None, False)
+scientist(['3S', '6D', 'AC'], None, False)
+scientist(['4S', '10C', 'KH'], None, True)

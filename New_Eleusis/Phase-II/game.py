@@ -61,7 +61,7 @@ adversary2 = Adversary()
 adversary3 = Adversary()
 
 # Set a rule for testing
-rule = "equal(is_royal(current), False)"
+rule = "if(is_royal(current), False)"
 setRule(rule)
 
 # The three cards that adhere to the rule
@@ -74,8 +74,10 @@ Use these to update your board state.
 """
 for round_num in range(14):
     # Each player plays a card or guesses a rule
+    print "\n Round Number: {} ".format(round_num)
     try:
         #Player 1 plays
+        print "Player 1 : Scientist's Turn"
         player_card_rule = player.play()
         if is_card(player_card_rule):
             del cards[0]
@@ -86,28 +88,29 @@ for round_num in range(14):
 
         #Adversary 1 plays
         ad1_card_rule = adversary1.play()
+        print "Adversary 1's Turn: {} ".format(ad1_card_rule) #print cards
         if is_card(ad1_card_rule):
             del cards[0]
             cards.append(ad1_card_rule)
-            #print cards
         else:
             raise Exception('')
 
         #Adversary 2 plays
         ad2_card_rule = adversary2.play()
+        print "Adversary 2's Turn: {} ".format(ad2_card_rule)  #print cards
         if is_card(ad2_card_rule):
             del cards[0]
             cards.append(ad2_card_rule)
-            #print cards
         else:
             raise Exception('')
 
         #Adversary 3 plays
+        print "Adversary 3's Turn: "
         ad3_card_rule = adversary3.play()
+        print "Adversary 3's Turn: {} ".format(ad3_card_rule)  # print cards
         if is_card(ad3_card_rule):
             del cards[0]
             cards.append(ad3_card_rule)
-            #print cards
         else:
             raise Exception('')
 
