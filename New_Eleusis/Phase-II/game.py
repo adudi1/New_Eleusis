@@ -1,6 +1,6 @@
 #Put your program name in place of program_name
 
-from Scientist_Merged_2 import *
+from Scientist_phase2 import *
 from random import randint
 from new_eleusis import *
 
@@ -63,17 +63,54 @@ adversary3 = Adversary()
 # Set a rule for testing
 rule = "if(is_royal(current), False)"
 setRule(rule)
+
 # The three cards that adhere to the rule
 cards = ["10H", "2C", "4S"]
 
+"""
+In each round scientist is called and you need to return a card or rule.
+The cards passed to scientist are the last 3 cards played.
+Use these to update your board state.
+"""
 for round_num in range(14):
     # Each player plays a card or guesses a rule
     try:
-        if is_card(adversary1.play()) or is_card(adversary2.play()) or is_card(adversary3.play()):
-            continue
+        #Player 1 plays
+        player_card_rule = player.play()
+        if is_card(player_card_rule):
+            del cards[0]
+            cards.append(player_card_rule)
+        else
+            raise Exception('')
+        
+
+        #Adversary 1 plays
+        ad1_card_rule = adversary1.play()
+        if is_card(ad1_card_rule):
+            del cards[0]
+            cards.append(ad1_card_rule)
+            #print cards
         else:
-            game_ended = True
-            break
+            raise Exception('')
+
+        #Adversary 2 plays
+        ad2_card_rule = adversary2.play()
+        if is_card(ad2_card_rule):
+            del cards[0]
+            cards.append(ad2_card_rule)
+            #print cards
+        else:
+            raise Exception('')
+
+        #Adversary 3 plays
+        ad3_card_rule = adversary3.play()
+        if is_card(ad3_card_rule):
+            del cards[0]
+            cards.append(ad3_card_rule)
+            #print cards
+        else:
+            raise Exception('')
+
     except:
         game_ended = True
         break
