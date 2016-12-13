@@ -16,9 +16,11 @@ def generate_random_card():
     return values[randint(0, len(values) - 1)] + suits[randint(0, len(suits) - 1)]
 
 def main():
+    print "Example rule: equal(color(current), B) | legal cards: 10S 2C JC | adversaries: 3 | plays:40"
+    print "Example rule: iff(equal(color(previous), R), equal(color(current), B), True) | legal cards: 1H 10C 5D"
     player = Scientist()
     rule = str(raw_input("Set God's rule: "))
-    cards_str = raw_input("Enter 3 legal cards")
+    cards_str = raw_input("Enter 3 legal cards: ")
     cards = str(cards_str).split()
     k = int(raw_input("Number of adversaries: "))
     n = int(raw_input("Adversary end's game at (play number): "))

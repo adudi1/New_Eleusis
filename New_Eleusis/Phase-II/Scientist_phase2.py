@@ -249,7 +249,7 @@ class Scientist:
 
 
     def scientist(self, cards, hand, game_ended):
-        print cards, hand, game_ended, self.rule()
+        # print cards, hand, game_ended, self.rule()
         if self.game_ended:
             exit(0)
         for card in cards:
@@ -257,9 +257,9 @@ class Scientist:
         self.possibleRules = self.forward_checking(self.possibleRules)
         self.checkCurrentRule();
 
-
         if hand is not None:
             self.hand(hand)
+
         if game_ended or self.game_ended:
             print "The Current board state :", self.prevCards
             return self.declareRule()
@@ -267,8 +267,6 @@ class Scientist:
 
 
     def setRule(self, rule):
-        # self.setRule(rule)
-        # self.initialise()
         self.god_rule = rule
 
 
@@ -524,7 +522,6 @@ def domain_3card_rules():
                         p = 0
                     n = 0
                 m = 0
-    print list[1:50]
     return list
 
 

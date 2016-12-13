@@ -1,0 +1,34 @@
+---------------------
+Team Name : Neurons
+Anusha Dudi
+Kaushik Velusamy
+Mounica Kalavakuri
+Ethan Hein
+-----------------------
+
+Instructions to run the program:
+
+If you use main.py that we uploaded, program asks for 
+God's rule, 
+3 legal cards, 
+number of adversaries (k)
+maximum plays (n) 
+i.e. play at which any of adversaries might declare a rule (n).
+
+main function provides scientist function a set 14 random cards (hand), and random played cards by k adversaries, scientist declares a rule before or at nth play.
+
+scientist returns a card or rule when called.
+
+To run the program using game.py:
+
+Create a Scientist Object, 
+myPlayer = Scientist()
+myPlayer.scientist(cards, hand, game_ended)
+Call the first scientist method with legal cards, hand of 14 cards and game_ended flag.
+From next iteration call scientist with cards played by adversaries/random cards, hand should be None, and game_ended flag.
+Pass game_ended flag as True when any adversary returns a rule.
+-------------------------------------------------------
+
+Description:
+Our player implements a CSP solver using forward chaining. We first generate onecard, two-card, or three-card rules, depending on how many cards are initially provided. For two- and three-card domains, we immediately eliminate any rule that does not match the given card(s). Forward chaining then comes from continuing to eliminate impossible rules as more cards are played, which very quickly narrows down the possible set of rules. To pick a card, we first pick a current rule, which is just the first rule in the list of (legal) rules. We then pick and play a card satisfying that rule. If successful, we increase our confidence for that rule, and if not, then that rule (and usually many others) is eliminated in forward chaining, and we pick a new rule to use the next time we play a card.
+   
